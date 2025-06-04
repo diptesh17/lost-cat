@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import Header from "./components/Header"
+import Navigation from "./components/Navigation"
+import HeroSection from "./components/HeroSection"
+import ContentSection from "./components/ContentSection"
+import OrangeStrip from "./components/OrangeStrip"
+import BlackStrip from "./components/BlackStrip"
+import Footer from "./components/Footer"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        margin: 0,
+        padding: 0,
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <Header />
+      <Navigation />
+      <HeroSection />
+      <ContentSection />
+      <OrangeStrip />
+      <BlackStrip />
+      <Footer />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
