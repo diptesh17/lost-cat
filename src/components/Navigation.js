@@ -1,4 +1,11 @@
-const Navigation = () => {
+"use client"
+
+const Navigation = ({ onNavigate, currentRoute }) => {
+  const handleNavClick = (linkName) => {
+    onNavigate(linkName)
+    console.log(`Navigating to ${linkName}`)
+  }
+
   return (
     <nav
       style={{
@@ -25,26 +32,29 @@ const Navigation = () => {
             gap: "40px",
           }}
         >
-          <li>
-            <a href="#" style={{ textDecoration: "none", color: "#666", fontSize: "14px" }}>
-              LINK 1
-            </a>
-          </li>
-          <li>
-            <a href="#" style={{ textDecoration: "none", color: "#666", fontSize: "14px" }}>
-              LINK 2
-            </a>
-          </li>
-          <li>
-            <a href="#" style={{ textDecoration: "none", color: "#666", fontSize: "14px" }}>
-              LINK 3
-            </a>
-          </li>
-          <li>
-            <a href="#" style={{ textDecoration: "none", color: "#666", fontSize: "14px" }}>
-              LINK 4
-            </a>
-          </li>
+          {["Home", "About", "Contact", "Career"].map((link) => (
+            <li key={link}>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleNavClick(link)
+                }}
+                style={{
+                  textDecoration: "none",
+                  color: currentRoute === link ? "#4CAF50" : "#666",
+                  fontSize: "14px",
+                  fontWeight: currentRoute === link ? "bold" : "normal",
+                  padding: "5px 10px",
+                  borderRadius: "4px",
+                  transition: "all 0.3s ease",
+                  backgroundColor: currentRoute === link ? "#f0f8f0" : "transparent",
+                }}
+              >
+                {link}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>

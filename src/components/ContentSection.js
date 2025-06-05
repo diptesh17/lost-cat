@@ -7,8 +7,8 @@ const ContentSection = () => {
 
   const quotes = [
     "The most active thing about me is my imagination.",
-    "Innovation distinguishes between a leader and a follower.",
-    "The future belongs to those who believe in the beauty of their dreams.",
+    "Innovation distinguishes between a leader and a follower. The way to get started is to quit talking.",
+    "The future belongs to those who believe in the beauty of their dreams and pursue them.",
     "Success is not final, failure is not fatal: it is the courage to continue that counts.",
   ]
 
@@ -128,66 +128,77 @@ const ContentSection = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
               paddingTop: "20px",
             }}
           >
-            <blockquote
-              style={{
-                fontSize: "18px",
-                fontStyle: "italic",
-                color: "#888",
-                textAlign: "center",
-                marginBottom: "20px",
-                position: "relative",
-                paddingLeft: "20px",
-                borderLeft: "4px solid #eee",
-                lineHeight: "1.4",
-                minHeight: "60px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              "{quotes[currentQuote]}"
-            </blockquote>
             <div
               style={{
-                display: "flex",
-                gap: "10px",
-                alignItems: "center",
+                width: "100%",
+                maxWidth: "350px",
+                marginBottom: "20px",
               }}
             >
-              <button
-                onClick={prevQuote}
+              <blockquote
                 style={{
-                  backgroundColor: "#eee",
-                  border: "none",
-                  padding: "8px 12px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "16px",
+                  fontSize: "18px",
+                  fontStyle: "italic",
+                  color: "#888",
+                  textAlign: "center",
+                  margin: "0 0 20px 0",
+                  padding: "20px",
+                  borderLeft: "4px solid #eee",
+                  lineHeight: "1.5",
+                  wordWrap: "break-word",
+                  minHeight: "80px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                ‹
-              </button>
-              <span style={{ fontSize: "12px", color: "#999" }}>
-                {currentQuote + 1} / {quotes.length}
-              </span>
-              <button
-                onClick={nextQuote}
+                "{quotes[currentQuote]}"
+              </blockquote>
+
+              <div
                 style={{
-                  backgroundColor: "#4CAF50",
-                  color: "white",
-                  border: "none",
-                  padding: "8px 12px",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "15px",
                 }}
               >
-                ›
-              </button>
+                <button
+                  onClick={prevQuote}
+                  style={{
+                    backgroundColor: "#eee",
+                    border: "none",
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                >
+                  ‹
+                </button>
+                <span style={{ fontSize: "12px", color: "#999", textAlign: "center" }}>
+                  {currentQuote + 1} / {quotes.length}
+                </span>
+                <button
+                  onClick={nextQuote}
+                  style={{
+                    backgroundColor: "#4CAF50",
+                    color: "white",
+                    border: "none",
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                >
+                  ›
+                </button>
+              </div>
             </div>
           </div>
         </div>

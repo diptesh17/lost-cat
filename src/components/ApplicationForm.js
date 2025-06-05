@@ -72,7 +72,7 @@ const ApplicationForm = ({ onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (validate()) {
-      alert("Form submitted successfully!")
+      alert("Login successful!")
       onClose()
     }
   }
@@ -118,7 +118,7 @@ const ApplicationForm = ({ onClose }) => {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-          <h2 style={{ margin: 0, color: "#333" }}>Application Form</h2>
+          <h2 style={{ margin: 0, color: "#333" }}>Login Form</h2>
           <button
             onClick={onClose}
             style={{
@@ -315,7 +315,7 @@ const ApplicationForm = ({ onClose }) => {
                 flex: 1,
               }}
             >
-              Submit
+              Login
             </button>
           </div>
         </form>

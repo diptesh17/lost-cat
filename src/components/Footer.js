@@ -1,4 +1,12 @@
-const Footer = () => {
+"use client"
+
+const Footer = ({ onNavigate, currentRoute }) => {
+  const handleFooterNavClick = (linkName) => {
+    if (onNavigate) {
+      onNavigate(linkName)
+    }
+  }
+
   return (
     <footer
       style={{
@@ -31,26 +39,25 @@ const Footer = () => {
               gap: "20px",
             }}
           >
-            <li>
-              <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "14px" }}>
-                Link 1
-              </a>
-            </li>
-            <li>
-              <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "14px" }}>
-                Link 2
-              </a>
-            </li>
-            <li>
-              <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "14px" }}>
-                Link 3
-              </a>
-            </li>
-            <li>
-              <a href="#" style={{ color: "white", textDecoration: "none", fontSize: "14px" }}>
-                Link 4
-              </a>
-            </li>
+            {["Home", "About", "Contact", "Career"].map((link) => (
+              <li key={link}>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleFooterNavClick(link)
+                  }}
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                    fontSize: "14px",
+                    opacity: currentRoute === link ? "1" : "0.7",
+                  }}
+                >
+                  {link}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

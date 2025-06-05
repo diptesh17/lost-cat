@@ -44,9 +44,15 @@ const Header = () => {
       </div>
 
       <div style={{ display: "flex", alignItems: "center" }}>
-        <div style={{ marginRight: "20px", display: "flex", alignItems: "center" }}>
-          <span style={{ marginRight: "5px" }}>📞</span>
-          <span>1234-567-890</span>
+        <div style={{ marginRight: "20px", display: "flex", alignItems: "center", gap: "20px" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span style={{ marginRight: "5px" }}>📞</span>
+            <span>9766162144</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span style={{ marginRight: "5px" }}>📧</span>
+            <span>diptesh.deore@accenture.com</span>
+          </div>
         </div>
         <button
           onClick={toggleForm}
@@ -61,7 +67,7 @@ const Header = () => {
             fontSize: "14px",
           }}
         >
-          Apply Now
+          Login
         </button>
       </div>
 
