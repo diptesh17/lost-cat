@@ -1,14 +1,8 @@
 "use client"
+import { useAuth } from "../context/AuthContext"
 
-import { useState } from "react"
-import ApplicationForm from "./ApplicationForm"
-
-const Header = () => {
-  const [showForm, setShowForm] = useState(false)
-
-  const toggleForm = () => {
-    setShowForm(!showForm)
-  }
+const Header = ({ onShowDB }) => {
+  const { isAuthenticated, currentUser, logout } = useAuth()
 
   return (
     <header
@@ -54,24 +48,44 @@ const Header = () => {
             <span>diptesh.deore@accenture.com</span>
           </div>
         </div>
-        <button
-          onClick={toggleForm}
-          style={{
-            backgroundColor: "#009933",
-            color: "white",
-            border: "none",
-            padding: "12px 24px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            fontSize: "14px",
-          }}
-        >
-          Login
-        </button>
-      </div>
 
-      {showForm && <ApplicationForm onClose={toggleForm} />}
+        {isAuthenticated ? (
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span style={{ marginRight: "10px", color: "#666" }}>Welcome, {currentUser?.username}!</span>
+            <button
+              onClick={onShowDB}
+              style={{
+                backgroundColor: "#2196F3",
+                color: "white",
+                border: "none",
+                padding: "12px 24px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "14px",
+                marginRight: "10px",
+              }}
+            >
+              DB
+            </button>
+            <button
+              onClick={logout}
+              style={{
+                backgroundColor: "#f44336",
+                color: "white",
+                border: "none",
+                padding: "12px 24px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "14px",
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        ) : null}
+      </div>
     </header>
   )
 }

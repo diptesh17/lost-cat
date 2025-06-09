@@ -1,17 +1,39 @@
+"use client"
+
+import { useState, useEffect } from "react"
+
 const HeroSection = () => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  const heroImages = [
+    "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1200&h=600&fit=crop&crop=center",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop&crop=center",
+    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=600&fit=crop&crop=center",
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&h=600&fit=crop&crop=center",
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop&crop=center",
+  ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length)
+    }, 2000) // Change image every 2 seconds
+
+    return () => clearInterval(interval)
+  }, [heroImages.length])
+
   return (
     <section
       style={{
         position: "relative",
-        height: "500px",
-        backgroundImage:
-          "url(https://images.unsplash.com/photo-1448375240586-882707db888b?w=1200&h=600&fit=crop&crop=center)",
+        height: "600px",
+        backgroundImage: `url(${heroImages[currentImageIndex]})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
         alignItems: "center",
         justifyContent: "flex-start",
         paddingLeft: "60px",
+        transition: "background-image 0.5s ease-in-out",
       }}
     >
       <div
@@ -45,6 +67,33 @@ const HeroSection = () => {
         >
           Let Us Help
         </button>
+      </div>
+
+      {/* Image indicators */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: "10px",
+        }}
+      >
+        {heroImages.map((_, index) => (
+          <div
+            key={index}
+            style={{
+              width: "12px",
+              height: "12px",
+              borderRadius: "50%",
+              backgroundColor: currentImageIndex === index ? "white" : "rgba(255,255,255,0.5)",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            onClick={() => setCurrentImageIndex(index)}
+          />
+        ))}
       </div>
     </section>
   )
