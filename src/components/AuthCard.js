@@ -8,6 +8,7 @@ const AuthCard = () => {
   const { login, register } = useAuth()
   const [activeTab, setActiveTab] = useState("login")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  // const [isRedirecting, setIsRedirecting] = useState(false)
 
   // Login form state
   const [loginData, setLoginData] = useState({
@@ -81,15 +82,15 @@ const AuthCard = () => {
     return Object.keys(errors).length === 0
   }
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault()
 
-    if (isSubmitting) return // Prevent multiple submissions
+    if (isSubmitting) return
 
     if (validateLogin()) {
       setIsSubmitting(true)
 
-      try {
+      setTimeout(() => {
         const success = login(loginData.username, loginData.password)
         if (success) {
           toast.success(`Welcome ${loginData.username}!`, {
@@ -102,60 +103,68 @@ const AuthCard = () => {
             autoClose: 3000,
           })
         }
-      } catch (error) {
-        toast.error("Login failed. Please try again.", {
-          position: "top-right",
-          autoClose: 3000,
-        })
-      } finally {
         setIsSubmitting(false)
-      }
+      }, 100)
     }
   }
 
-  const handleRegister = async (e) => {
+  const handleRegister = (e) => {
     e.preventDefault()
 
     // Prevent multiple submissions
     if (isSubmitting) {
-      console.log("Registration already in progress...")
+      console.log("Already processing, ignoring click")
       return
     }
 
-    if (validateRegister()) {
-      setIsSubmitting(true)
-      console.log("Starting registration process...")
+    console.log("Starting registration...")
 
+    if (!validateRegister()) {
+      console.log("Validation failed")
+      return
+    }
+
+    setIsSubmitting(true)
+    console.log("Setting isSubmitting to true")
+
+    // Simulate processing time and then show success
+    setTimeout(() => {
       try {
-        // Register the user and save to database
+        console.log("Registering user with data:", registerData.username)
+
+        // Register the user - this should create only ONE entry
         const registrationSuccess = register(registerData)
-        console.log("Registration result:", registrationSuccess)
 
         if (registrationSuccess) {
-          // Auto-login the user after registration
-          const autoLoginSuccess = login(registerData.username, registerData.password)
-          console.log("Auto-login result:", autoLoginSuccess)
+          console.log("Registration successful")
 
-          if (autoLoginSuccess) {
-            // Show welcome toast with username
-            toast.success(`Welcome ${registerData.username}! Registration successful!`, {
-              position: "top-right",
-              autoClose: 3000,
-            })
+          // Show success toast and ask user to login
+          toast.success("Registration successful! Please login now.", {
+            position: "top-right",
+            autoClose: 4000,
+          })
 
-            // Reset form
-            setRegisterData({
-              username: "",
-              password: "",
-              confirmPassword: "",
-              email: "",
-              gender: "",
-              contact: "",
-              address: "",
-            })
+          // Reset form
+          setRegisterData({
+            username: "",
+            password: "",
+            confirmPassword: "",
+            email: "",
+            gender: "",
+            contact: "",
+            address: "",
+          })
 
-            console.log("Registration completed successfully")
-          }
+          // Switch to login tab
+          setActiveTab("login")
+          setIsSubmitting(false)
+        } else {
+          console.log("Registration failed")
+          toast.error("Registration failed. Username might already exist.", {
+            position: "top-right",
+            autoClose: 3000,
+          })
+          setIsSubmitting(false)
         }
       } catch (error) {
         console.error("Registration error:", error)
@@ -163,11 +172,9 @@ const AuthCard = () => {
           position: "top-right",
           autoClose: 3000,
         })
-      } finally {
         setIsSubmitting(false)
-        console.log("Registration process finished")
       }
-    }
+    }, 1000) // 1 second processing time
   }
 
   const handleLoginChange = (e) => {
@@ -181,13 +188,76 @@ const AuthCard = () => {
   }
 
   const switchTab = (tab) => {
-    if (isSubmitting) return // Prevent tab switching during submission
+    if (isSubmitting) return
 
     setActiveTab(tab)
     setLoginErrors({})
     setRegisterErrors({})
-    setIsSubmitting(false) // Reset submission state
   }
+
+  // Show redirecting screen
+  // if (isRedirecting) {
+  //   return (
+  //     <div
+  //       style={{
+  //         minHeight: "100vh",
+  //         display: "flex",
+  //         alignItems: "center",
+  //         justifyContent: "center",
+  //         backgroundColor: "#f5f5f5",
+  //         padding: "20px",
+  //       }}
+  //     >
+  //       <div
+  //         style={{
+  //           backgroundColor: "white",
+  //           borderRadius: "10px",
+  //           boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+  //           padding: "60px 40px",
+  //           textAlign: "center",
+  //           maxWidth: "400px",
+  //           width: "100%",
+  //         }}
+  //       >
+  //         <div
+  //           style={{
+  //             width: "60px",
+  //             height: "60px",
+  //             border: "4px solid #4CAF50",
+  //             borderTop: "4px solid transparent",
+  //             borderRadius: "50%",
+  //             animation: "spin 1s linear infinite",
+  //             margin: "0 auto 30px",
+  //           }}
+  //         />
+  //         <h2 style={{ color: "#4CAF50", marginBottom: "20px", fontSize: "24px" }}>🎉 Registration Successful!</h2>
+  //         <p style={{ color: "#666", fontSize: "16px", marginBottom: "20px" }}>
+  //           Welcome aboard! Redirecting you to home page...
+  //         </p>
+  //         <div
+  //           style={{
+  //             backgroundColor: "#f0f8f0",
+  //             padding: "15px",
+  //             borderRadius: "8px",
+  //             border: "1px solid #4CAF50",
+  //           }}
+  //         >
+  //           <p style={{ margin: 0, color: "#4CAF50", fontSize: "14px", fontWeight: "bold" }}>
+  //             ✅ Account created successfully
+  //           </p>
+  //         </div>
+  //       </div>
+
+  //       {/* CSS for spinner animation */}
+  //       <style>{`
+  //         @keyframes spin {
+  //           0% { transform: rotate(0deg); }
+  //           100% { transform: rotate(360deg); }
+  //         }
+  //       `}</style>
+  //     </div>
+  //   )
+  // }
 
   return (
     <div
@@ -208,8 +278,6 @@ const AuthCard = () => {
           width: "100%",
           maxWidth: "500px",
           overflow: "hidden",
-          opacity: isSubmitting ? 0.8 : 1,
-          transition: "opacity 0.3s ease",
         }}
       >
         {/* Tab Headers */}
@@ -227,7 +295,6 @@ const AuthCard = () => {
               fontWeight: "bold",
               cursor: isSubmitting ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
-              opacity: isSubmitting ? 0.6 : 1,
             }}
           >
             Login
@@ -245,7 +312,6 @@ const AuthCard = () => {
               fontWeight: "bold",
               cursor: isSubmitting ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
-              opacity: isSubmitting ? 0.6 : 1,
             }}
           >
             Register
@@ -276,7 +342,6 @@ const AuthCard = () => {
                     borderRadius: "4px",
                     fontSize: "14px",
                     boxSizing: "border-box",
-                    opacity: isSubmitting ? 0.6 : 1,
                   }}
                   placeholder="Enter username (admin)"
                 />
@@ -302,7 +367,6 @@ const AuthCard = () => {
                     borderRadius: "4px",
                     fontSize: "14px",
                     boxSizing: "border-box",
-                    opacity: isSubmitting ? 0.6 : 1,
                   }}
                   placeholder="Enter password (12345)"
                 />
@@ -374,7 +438,6 @@ const AuthCard = () => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
-                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                     placeholder="Enter username"
                   />
@@ -400,7 +463,6 @@ const AuthCard = () => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
-                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                     placeholder="Enter password (min 6 characters)"
                   />
@@ -426,7 +488,6 @@ const AuthCard = () => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
-                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                     placeholder="Confirm your password"
                   />
@@ -454,7 +515,6 @@ const AuthCard = () => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
-                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                     placeholder="Enter your email"
                   />
@@ -479,7 +539,6 @@ const AuthCard = () => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
-                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                   >
                     <option value="">Select Gender</option>
@@ -510,7 +569,6 @@ const AuthCard = () => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
-                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                   />
                   {registerErrors.contact && (
@@ -537,7 +595,6 @@ const AuthCard = () => {
                       fontSize: "14px",
                       boxSizing: "border-box",
                       resize: "vertical",
-                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                   />
                 </div>
@@ -586,7 +643,7 @@ const AuthCard = () => {
       </div>
 
       {/* CSS for spinner animation */}
-      <style jsx>{`
+      <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
