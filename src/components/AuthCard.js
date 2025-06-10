@@ -8,7 +8,6 @@ const AuthCard = () => {
   const { login, register } = useAuth()
   const [activeTab, setActiveTab] = useState("login")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  // const [isRedirecting, setIsRedirecting] = useState(false)
 
   // Login form state
   const [loginData, setLoginData] = useState({
@@ -111,7 +110,6 @@ const AuthCard = () => {
   const handleRegister = (e) => {
     e.preventDefault()
 
-    // Prevent multiple submissions
     if (isSubmitting) {
       console.log("Already processing, ignoring click")
       return
@@ -127,24 +125,20 @@ const AuthCard = () => {
     setIsSubmitting(true)
     console.log("Setting isSubmitting to true")
 
-    // Simulate processing time and then show success
     setTimeout(() => {
       try {
         console.log("Registering user with data:", registerData.username)
 
-        // Register the user - this should create only ONE entry
         const registrationSuccess = register(registerData)
 
         if (registrationSuccess) {
           console.log("Registration successful")
 
-          // Show success toast and ask user to login
           toast.success("Registration successful! Please login now.", {
             position: "top-right",
             autoClose: 4000,
           })
 
-          // Reset form
           setRegisterData({
             username: "",
             password: "",
@@ -155,7 +149,6 @@ const AuthCard = () => {
             address: "",
           })
 
-          // Switch to login tab
           setActiveTab("login")
           setIsSubmitting(false)
         } else {
@@ -174,7 +167,7 @@ const AuthCard = () => {
         })
         setIsSubmitting(false)
       }
-    }, 1000) // 1 second processing time
+    }, 1000)
   }
 
   const handleLoginChange = (e) => {
@@ -195,70 +188,6 @@ const AuthCard = () => {
     setRegisterErrors({})
   }
 
-  // Show redirecting screen
-  // if (isRedirecting) {
-  //   return (
-  //     <div
-  //       style={{
-  //         minHeight: "100vh",
-  //         display: "flex",
-  //         alignItems: "center",
-  //         justifyContent: "center",
-  //         backgroundColor: "#f5f5f5",
-  //         padding: "20px",
-  //       }}
-  //     >
-  //       <div
-  //         style={{
-  //           backgroundColor: "white",
-  //           borderRadius: "10px",
-  //           boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
-  //           padding: "60px 40px",
-  //           textAlign: "center",
-  //           maxWidth: "400px",
-  //           width: "100%",
-  //         }}
-  //       >
-  //         <div
-  //           style={{
-  //             width: "60px",
-  //             height: "60px",
-  //             border: "4px solid #4CAF50",
-  //             borderTop: "4px solid transparent",
-  //             borderRadius: "50%",
-  //             animation: "spin 1s linear infinite",
-  //             margin: "0 auto 30px",
-  //           }}
-  //         />
-  //         <h2 style={{ color: "#4CAF50", marginBottom: "20px", fontSize: "24px" }}>🎉 Registration Successful!</h2>
-  //         <p style={{ color: "#666", fontSize: "16px", marginBottom: "20px" }}>
-  //           Welcome aboard! Redirecting you to home page...
-  //         </p>
-  //         <div
-  //           style={{
-  //             backgroundColor: "#f0f8f0",
-  //             padding: "15px",
-  //             borderRadius: "8px",
-  //             border: "1px solid #4CAF50",
-  //           }}
-  //         >
-  //           <p style={{ margin: 0, color: "#4CAF50", fontSize: "14px", fontWeight: "bold" }}>
-  //             ✅ Account created successfully
-  //           </p>
-  //         </div>
-  //       </div>
-
-  //       {/* CSS for spinner animation */}
-  //       <style>{`
-  //         @keyframes spin {
-  //           0% { transform: rotate(0deg); }
-  //           100% { transform: rotate(360deg); }
-  //         }
-  //       `}</style>
-  //     </div>
-  //   )
-  // }
-
   return (
     <div
       style={{
@@ -267,7 +196,7 @@ const AuthCard = () => {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#f5f5f5",
-        padding: "20px",
+        padding: "10px",
       }}
     >
       <div
@@ -277,6 +206,7 @@ const AuthCard = () => {
           boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
           width: "100%",
           maxWidth: "500px",
+          minWidth: "280px",
           overflow: "hidden",
         }}
       >
@@ -287,11 +217,11 @@ const AuthCard = () => {
             disabled={isSubmitting}
             style={{
               flex: 1,
-              padding: "20px",
+              padding: "15px 10px",
               border: "none",
               backgroundColor: activeTab === "login" ? "#4CAF50" : "transparent",
               color: activeTab === "login" ? "white" : "#666",
-              fontSize: "18px",
+              fontSize: "16px",
               fontWeight: "bold",
               cursor: isSubmitting ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
@@ -304,11 +234,11 @@ const AuthCard = () => {
             disabled={isSubmitting}
             style={{
               flex: 1,
-              padding: "20px",
+              padding: "15px 10px",
               border: "none",
               backgroundColor: activeTab === "register" ? "#4CAF50" : "transparent",
               color: activeTab === "register" ? "white" : "#666",
-              fontSize: "18px",
+              fontSize: "16px",
               fontWeight: "bold",
               cursor: isSubmitting ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
@@ -319,14 +249,32 @@ const AuthCard = () => {
         </div>
 
         {/* Form Content */}
-        <div style={{ padding: "40px" }}>
+        <div style={{ padding: "20px" }}>
           {activeTab === "login" ? (
             // Login Form
             <form onSubmit={handleLogin}>
-              <h2 style={{ textAlign: "center", marginBottom: "30px", color: "#333", marginTop: 0 }}>Welcome Back!</h2>
+              <h2
+                style={{
+                  textAlign: "center",
+                  marginBottom: "25px",
+                  color: "#333",
+                  marginTop: 0,
+                  fontSize: "20px",
+                }}
+              >
+                Welcome Back!
+              </h2>
 
-              <div style={{ marginBottom: "20px" }}>
-                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+              <div style={{ marginBottom: "18px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "6px",
+                    fontWeight: "bold",
+                    color: "#333",
+                    fontSize: "14px",
+                  }}
+                >
                   Username:
                 </label>
                 <input
@@ -350,8 +298,16 @@ const AuthCard = () => {
                 )}
               </div>
 
-              <div style={{ marginBottom: "30px" }}>
-                <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+              <div style={{ marginBottom: "25px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    marginBottom: "6px",
+                    fontWeight: "bold",
+                    color: "#333",
+                    fontSize: "14px",
+                  }}
+                >
                   Password:
                 </label>
                 <input
@@ -383,7 +339,7 @@ const AuthCard = () => {
                   backgroundColor: isSubmitting ? "#ccc" : "#4CAF50",
                   color: "white",
                   border: "none",
-                  padding: "15px",
+                  padding: "14px",
                   borderRadius: "4px",
                   cursor: isSubmitting ? "not-allowed" : "pointer",
                   fontSize: "16px",
@@ -392,6 +348,7 @@ const AuthCard = () => {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: "10px",
+                  minHeight: "50px",
                 }}
               >
                 {isSubmitting ? (
@@ -415,14 +372,36 @@ const AuthCard = () => {
             </form>
           ) : (
             // Register Form
-            <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+            <div
+              style={{
+                maxHeight: "70vh",
+                overflowY: "auto",
+                paddingRight: "5px",
+              }}
+            >
               <form onSubmit={handleRegister}>
-                <h2 style={{ textAlign: "center", marginBottom: "30px", color: "#333", marginTop: 0 }}>
+                <h2
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "25px",
+                    color: "#333",
+                    marginTop: 0,
+                    fontSize: "20px",
+                  }}
+                >
                   Create Account
                 </h2>
 
                 <div style={{ marginBottom: "15px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
                     Username:
                   </label>
                   <input
@@ -447,7 +426,15 @@ const AuthCard = () => {
                 </div>
 
                 <div style={{ marginBottom: "15px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
                     Password:
                   </label>
                   <input
@@ -472,7 +459,15 @@ const AuthCard = () => {
                 </div>
 
                 <div style={{ marginBottom: "15px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
                     Confirm Password:
                   </label>
                   <input
@@ -499,7 +494,15 @@ const AuthCard = () => {
                 </div>
 
                 <div style={{ marginBottom: "15px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
                     Email:
                   </label>
                   <input
@@ -524,7 +527,15 @@ const AuthCard = () => {
                 </div>
 
                 <div style={{ marginBottom: "15px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
                     Gender:
                   </label>
                   <select
@@ -552,7 +563,15 @@ const AuthCard = () => {
                 </div>
 
                 <div style={{ marginBottom: "15px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
                     Contact Number:
                   </label>
                   <input
@@ -577,7 +596,15 @@ const AuthCard = () => {
                 </div>
 
                 <div style={{ marginBottom: "20px" }}>
-                  <label style={{ display: "block", marginBottom: "5px", fontWeight: "bold", color: "#333" }}>
+                  <label
+                    style={{
+                      display: "block",
+                      marginBottom: "5px",
+                      fontWeight: "bold",
+                      color: "#333",
+                      fontSize: "14px",
+                    }}
+                  >
                     Address:
                   </label>
                   <textarea
@@ -607,7 +634,7 @@ const AuthCard = () => {
                     backgroundColor: isSubmitting ? "#ccc" : "#4CAF50",
                     color: "white",
                     border: "none",
-                    padding: "15px",
+                    padding: "14px",
                     borderRadius: "4px",
                     cursor: isSubmitting ? "not-allowed" : "pointer",
                     fontSize: "16px",
@@ -616,6 +643,7 @@ const AuthCard = () => {
                     alignItems: "center",
                     justifyContent: "center",
                     gap: "10px",
+                    minHeight: "50px",
                   }}
                 >
                   {isSubmitting ? (
@@ -647,6 +675,94 @@ const AuthCard = () => {
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+          .auth-container {
+            padding: 5px !important;
+          }
+          
+          .auth-card {
+            margin: 5px !important;
+            border-radius: 8px !important;
+          }
+          
+          .tab-button {
+            padding: 12px 8px !important;
+            font-size: 14px !important;
+          }
+          
+          .form-content {
+            padding: 15px !important;
+          }
+          
+          .form-title {
+            font-size: 18px !important;
+            margin-bottom: 20px !important;
+          }
+          
+          .form-input {
+            padding: 10px !important;
+            font-size: 16px !important; /* Prevents zoom on iOS */
+          }
+          
+          .form-button {
+            padding: 12px !important;
+            font-size: 15px !important;
+            min-height: 45px !important;
+          }
+          
+          .register-form {
+            max-height: 65vh !important;
+          }
+        }
+
+        /* Tablet optimizations */
+        @media (min-width: 481px) and (max-width: 768px) {
+          .auth-card {
+            max-width: 450px !important;
+          }
+          
+          .form-content {
+            padding: 25px !important;
+          }
+        }
+
+        /* Large screen optimizations */
+        @media (min-width: 1200px) {
+          .auth-card {
+            max-width: 550px !important;
+          }
+        }
+
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+          .form-input, .form-button, select, textarea {
+            min-height: 44px !important; /* Apple's recommended touch target size */
+          }
+          
+          .tab-button {
+            min-height: 44px !important;
+          }
+        }
+
+        /* Landscape mobile optimizations */
+        @media (max-width: 768px) and (orientation: landscape) {
+          .register-form {
+            max-height: 50vh !important;
+          }
+          
+          .auth-container {
+            padding: 5px !important;
+          }
+        }
+
+        /* High DPI screen optimizations */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+          .auth-card {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+          }
         }
       `}</style>
     </div>

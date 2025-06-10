@@ -15,25 +15,54 @@ const Header = ({ onShowDB }) => {
         borderBottom: "1px solid #eee",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          cursor: "pointer",
+          transition: "opacity 0.2s ease",
+        }}
+        onClick={() => (window.location.href = "http://localhost:3000")}
+        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.8")}
+        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+        title="Go to Homepage"
+      >
         <div
           style={{
             width: "40px",
             height: "40px",
-            backgroundColor: "#eee",
-            marginRight: "10px",
+            backgroundColor: "#A100FF",
+            marginRight: "15px",
             borderRadius: "4px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "relative",
+            overflow: "hidden",
           }}
-        ></div>
+        >
+          <div
+            style={{
+              position: "absolute",
+              width: "24px",
+              height: "24px",
+              borderRight: "3px solid white",
+              borderTop: "3px solid white",
+              transform: "rotate(45deg)",
+              marginLeft: "-3px",
+            }}
+          ></div>
+        </div>
         <h1
           style={{
             margin: 0,
             fontSize: "24px",
             fontWeight: "bold",
+            letterSpacing: "0.5px",
           }}
         >
-          <span style={{ color: "#008000" }}>LOREM</span>
-          <span style={{ color: "#FFA500" }}>IPSUM</span>
+          <span style={{ color: "#A100FF" }}>ACCENTURE</span>
+          <span style={{ color: "#000000" }}>TECH</span>
         </h1>
       </div>
 
