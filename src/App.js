@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { AuthProvider, useAuth } from "./context/AuthContext"
 import { ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -20,7 +20,6 @@ const AppContent = () => {
   const [currentRoute, setCurrentRoute] = useState("Home")
   const [showMainContent, setShowMainContent] = useState(true)
   const [showDB, setShowDB] = useState(false)
-  const [isRedirecting, setIsRedirecting] = useState(false)
 
   const handleNavigation = (route) => {
     setCurrentRoute(route)
@@ -35,53 +34,17 @@ const AppContent = () => {
     setShowDB(false)
   }
 
-  const handleRegisterSuccess = () => {
-    console.log("Register success callback triggered")
-    setIsRedirecting(true)
-
-    // Force redirect to home screen
-    setTimeout(() => {
-      setCurrentRoute("Home")
-      setShowMainContent(true)
-      setIsRedirecting(false)
-      console.log("Redirected to home screen")
-    }, 500)
-  }
-
-  // Debug: Log authentication state changes
-  useEffect(() => {
-    console.log("Authentication state changed:", isAuthenticated)
-  }, [isAuthenticated])
-
-  if (!isAuthenticated && !isRedirecting) {
+  // Show auth card if not authenticated
+  if (!isAuthenticated) {
     return (
       <>
-        <AuthCard onRegisterSuccess={handleRegisterSuccess} />
+        <AuthCard />
         <ToastContainer />
       </>
     )
   }
 
-  if (isRedirecting) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#f5f5f5",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <h2 style={{ color: "#4CAF50", marginBottom: "20px" }}>Welcome!</h2>
-          <p style={{ color: "#666" }}>Redirecting to home screen...</p>
-        </div>
-        <ToastContainer />
-      </div>
-    )
-  }
-
+  // Show main application when authenticated
   return (
     <div
       style={{

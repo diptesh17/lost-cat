@@ -37,12 +37,24 @@ export const AuthProvider = ({ children }) => {
   }
 
   const register = (userData) => {
+    // Create new user with timestamp and unique ID
     const newUser = {
       id: Date.now(),
-      ...userData,
+      username: userData.username,
+      password: userData.password,
+      email: userData.email,
+      gender: userData.gender,
+      contact: userData.contact,
+      address: userData.address || "N/A",
       registeredAt: new Date().toLocaleString(),
     }
+
+    // Add user to database
     setUsers((prev) => [...prev, newUser])
+
+    console.log("User registered successfully:", newUser)
+    console.log("Total users in database:", users.length + 1)
+
     return true
   }
 

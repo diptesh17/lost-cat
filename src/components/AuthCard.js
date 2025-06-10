@@ -4,9 +4,10 @@ import { useState } from "react"
 import { useAuth } from "../context/AuthContext"
 import { toast } from "react-toastify"
 
-const AuthCard = ({ onRegisterSuccess }) => {
+const AuthCard = () => {
   const { login, register } = useAuth()
   const [activeTab, setActiveTab] = useState("login")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Login form state
   const [loginData, setLoginData] = useState({
@@ -80,56 +81,91 @@ const AuthCard = ({ onRegisterSuccess }) => {
     return Object.keys(errors).length === 0
   }
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault()
+
+    if (isSubmitting) return // Prevent multiple submissions
+
     if (validateLogin()) {
-      const success = login(loginData.username, loginData.password)
-      if (success) {
-        toast.success(`Welcome ${loginData.username}!`, {
+      setIsSubmitting(true)
+
+      try {
+        const success = login(loginData.username, loginData.password)
+        if (success) {
+          toast.success(`Welcome ${loginData.username}!`, {
+            position: "top-right",
+            autoClose: 3000,
+          })
+        } else {
+          toast.error("Invalid credentials! Use admin/12345", {
+            position: "top-right",
+            autoClose: 3000,
+          })
+        }
+      } catch (error) {
+        toast.error("Login failed. Please try again.", {
           position: "top-right",
           autoClose: 3000,
         })
-      } else {
-        toast.error("Invalid credentials! Use admin/12345", {
-          position: "top-right",
-          autoClose: 3000,
-        })
+      } finally {
+        setIsSubmitting(false)
       }
     }
   }
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault()
+
+    // Prevent multiple submissions
+    if (isSubmitting) {
+      console.log("Registration already in progress...")
+      return
+    }
+
     if (validateRegister()) {
-      // Register the user
-      register(registerData)
+      setIsSubmitting(true)
+      console.log("Starting registration process...")
 
-      // Auto-login the user after registration
-      const autoLoginSuccess = login(registerData.username, registerData.password)
+      try {
+        // Register the user and save to database
+        const registrationSuccess = register(registerData)
+        console.log("Registration result:", registrationSuccess)
 
-      if (autoLoginSuccess) {
-        toast.success(`Welcome ${registerData.username}! Registration successful!`, {
+        if (registrationSuccess) {
+          // Auto-login the user after registration
+          const autoLoginSuccess = login(registerData.username, registerData.password)
+          console.log("Auto-login result:", autoLoginSuccess)
+
+          if (autoLoginSuccess) {
+            // Show welcome toast with username
+            toast.success(`Welcome ${registerData.username}! Registration successful!`, {
+              position: "top-right",
+              autoClose: 3000,
+            })
+
+            // Reset form
+            setRegisterData({
+              username: "",
+              password: "",
+              confirmPassword: "",
+              email: "",
+              gender: "",
+              contact: "",
+              address: "",
+            })
+
+            console.log("Registration completed successfully")
+          }
+        }
+      } catch (error) {
+        console.error("Registration error:", error)
+        toast.error("Registration failed. Please try again.", {
           position: "top-right",
           autoClose: 3000,
         })
-
-        // Reset form
-        setRegisterData({
-          username: "",
-          password: "",
-          confirmPassword: "",
-          email: "",
-          gender: "",
-          contact: "",
-          address: "",
-        })
-
-        // Trigger redirect to home screen
-        if (onRegisterSuccess) {
-          setTimeout(() => {
-            onRegisterSuccess()
-          }, 100) // Small delay to ensure state updates
-        }
+      } finally {
+        setIsSubmitting(false)
+        console.log("Registration process finished")
       }
     }
   }
@@ -145,9 +181,12 @@ const AuthCard = ({ onRegisterSuccess }) => {
   }
 
   const switchTab = (tab) => {
+    if (isSubmitting) return // Prevent tab switching during submission
+
     setActiveTab(tab)
     setLoginErrors({})
     setRegisterErrors({})
+    setIsSubmitting(false) // Reset submission state
   }
 
   return (
@@ -169,12 +208,15 @@ const AuthCard = ({ onRegisterSuccess }) => {
           width: "100%",
           maxWidth: "500px",
           overflow: "hidden",
+          opacity: isSubmitting ? 0.8 : 1,
+          transition: "opacity 0.3s ease",
         }}
       >
         {/* Tab Headers */}
         <div style={{ display: "flex", backgroundColor: "#f8f9fa" }}>
           <button
             onClick={() => switchTab("login")}
+            disabled={isSubmitting}
             style={{
               flex: 1,
               padding: "20px",
@@ -183,14 +225,16 @@ const AuthCard = ({ onRegisterSuccess }) => {
               color: activeTab === "login" ? "white" : "#666",
               fontSize: "18px",
               fontWeight: "bold",
-              cursor: "pointer",
+              cursor: isSubmitting ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
+              opacity: isSubmitting ? 0.6 : 1,
             }}
           >
             Login
           </button>
           <button
             onClick={() => switchTab("register")}
+            disabled={isSubmitting}
             style={{
               flex: 1,
               padding: "20px",
@@ -199,8 +243,9 @@ const AuthCard = ({ onRegisterSuccess }) => {
               color: activeTab === "register" ? "white" : "#666",
               fontSize: "18px",
               fontWeight: "bold",
-              cursor: "pointer",
+              cursor: isSubmitting ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
+              opacity: isSubmitting ? 0.6 : 1,
             }}
           >
             Register
@@ -223,6 +268,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                   name="username"
                   value={loginData.username}
                   onChange={handleLoginChange}
+                  disabled={isSubmitting}
                   style={{
                     width: "100%",
                     padding: "12px",
@@ -230,6 +276,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     borderRadius: "4px",
                     fontSize: "14px",
                     boxSizing: "border-box",
+                    opacity: isSubmitting ? 0.6 : 1,
                   }}
                   placeholder="Enter username (admin)"
                 />
@@ -247,6 +294,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                   name="password"
                   value={loginData.password}
                   onChange={handleLoginChange}
+                  disabled={isSubmitting}
                   style={{
                     width: "100%",
                     padding: "12px",
@@ -254,6 +302,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     borderRadius: "4px",
                     fontSize: "14px",
                     boxSizing: "border-box",
+                    opacity: isSubmitting ? 0.6 : 1,
                   }}
                   placeholder="Enter password (12345)"
                 />
@@ -264,19 +313,40 @@ const AuthCard = ({ onRegisterSuccess }) => {
 
               <button
                 type="submit"
+                disabled={isSubmitting}
                 style={{
                   width: "100%",
-                  backgroundColor: "#4CAF50",
+                  backgroundColor: isSubmitting ? "#ccc" : "#4CAF50",
                   color: "white",
                   border: "none",
                   padding: "15px",
                   borderRadius: "4px",
-                  cursor: "pointer",
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
                   fontSize: "16px",
                   fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "10px",
                 }}
               >
-                Login
+                {isSubmitting ? (
+                  <>
+                    <div
+                      style={{
+                        width: "16px",
+                        height: "16px",
+                        border: "2px solid #fff",
+                        borderTop: "2px solid transparent",
+                        borderRadius: "50%",
+                        animation: "spin 1s linear infinite",
+                      }}
+                    />
+                    Logging in...
+                  </>
+                ) : (
+                  "Login"
+                )}
               </button>
             </form>
           ) : (
@@ -296,6 +366,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     name="username"
                     value={registerData.username}
                     onChange={handleRegisterChange}
+                    disabled={isSubmitting}
                     style={{
                       width: "100%",
                       padding: "10px",
@@ -303,7 +374,9 @@ const AuthCard = ({ onRegisterSuccess }) => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
+                      opacity: isSubmitting ? 0.6 : 1,
                     }}
+                    placeholder="Enter username"
                   />
                   {registerErrors.username && (
                     <p style={{ color: "red", margin: "5px 0 0", fontSize: "12px" }}>{registerErrors.username}</p>
@@ -319,6 +392,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     name="password"
                     value={registerData.password}
                     onChange={handleRegisterChange}
+                    disabled={isSubmitting}
                     style={{
                       width: "100%",
                       padding: "10px",
@@ -326,7 +400,9 @@ const AuthCard = ({ onRegisterSuccess }) => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
+                      opacity: isSubmitting ? 0.6 : 1,
                     }}
+                    placeholder="Enter password (min 6 characters)"
                   />
                   {registerErrors.password && (
                     <p style={{ color: "red", margin: "5px 0 0", fontSize: "12px" }}>{registerErrors.password}</p>
@@ -342,6 +418,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     name="confirmPassword"
                     value={registerData.confirmPassword}
                     onChange={handleRegisterChange}
+                    disabled={isSubmitting}
                     style={{
                       width: "100%",
                       padding: "10px",
@@ -349,7 +426,9 @@ const AuthCard = ({ onRegisterSuccess }) => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
+                      opacity: isSubmitting ? 0.6 : 1,
                     }}
+                    placeholder="Confirm your password"
                   />
                   {registerErrors.confirmPassword && (
                     <p style={{ color: "red", margin: "5px 0 0", fontSize: "12px" }}>
@@ -367,6 +446,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     name="email"
                     value={registerData.email}
                     onChange={handleRegisterChange}
+                    disabled={isSubmitting}
                     style={{
                       width: "100%",
                       padding: "10px",
@@ -374,7 +454,9 @@ const AuthCard = ({ onRegisterSuccess }) => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
+                      opacity: isSubmitting ? 0.6 : 1,
                     }}
+                    placeholder="Enter your email"
                   />
                   {registerErrors.email && (
                     <p style={{ color: "red", margin: "5px 0 0", fontSize: "12px" }}>{registerErrors.email}</p>
@@ -389,6 +471,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     name="gender"
                     value={registerData.gender}
                     onChange={handleRegisterChange}
+                    disabled={isSubmitting}
                     style={{
                       width: "100%",
                       padding: "10px",
@@ -396,6 +479,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
+                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                   >
                     <option value="">Select Gender</option>
@@ -417,6 +501,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     name="contact"
                     value={registerData.contact}
                     onChange={handleRegisterChange}
+                    disabled={isSubmitting}
                     placeholder="Enter 10-digit number"
                     style={{
                       width: "100%",
@@ -425,6 +510,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                       borderRadius: "4px",
                       fontSize: "14px",
                       boxSizing: "border-box",
+                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                   />
                   {registerErrors.contact && (
@@ -440,6 +526,7 @@ const AuthCard = ({ onRegisterSuccess }) => {
                     name="address"
                     value={registerData.address}
                     onChange={handleRegisterChange}
+                    disabled={isSubmitting}
                     placeholder="Enter your address (optional)"
                     style={{
                       width: "100%",
@@ -450,31 +537,61 @@ const AuthCard = ({ onRegisterSuccess }) => {
                       fontSize: "14px",
                       boxSizing: "border-box",
                       resize: "vertical",
+                      opacity: isSubmitting ? 0.6 : 1,
                     }}
                   />
                 </div>
 
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   style={{
                     width: "100%",
-                    backgroundColor: "#4CAF50",
+                    backgroundColor: isSubmitting ? "#ccc" : "#4CAF50",
                     color: "white",
                     border: "none",
                     padding: "15px",
                     borderRadius: "4px",
-                    cursor: "pointer",
+                    cursor: isSubmitting ? "not-allowed" : "pointer",
                     fontSize: "16px",
                     fontWeight: "bold",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "10px",
                   }}
                 >
-                  Register
+                  {isSubmitting ? (
+                    <>
+                      <div
+                        style={{
+                          width: "16px",
+                          height: "16px",
+                          border: "2px solid #fff",
+                          borderTop: "2px solid transparent",
+                          borderRadius: "50%",
+                          animation: "spin 1s linear infinite",
+                        }}
+                      />
+                      Registering...
+                    </>
+                  ) : (
+                    "Register"
+                  )}
                 </button>
               </form>
             </div>
           )}
         </div>
       </div>
+
+      {/* CSS for spinner animation */}
+      <style jsx>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   )
 }
