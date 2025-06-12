@@ -4,6 +4,7 @@ import { useState } from "react"
 
 const ContentSection = () => {
   const [currentQuote, setCurrentQuote] = useState(0)
+  const [lastClickedArrow, setLastClickedArrow] = useState(null) // Track which arrow was last clicked
 
   const quotes = [
     "The most active thing about me is my imagination.",
@@ -14,10 +15,12 @@ const ContentSection = () => {
 
   const nextQuote = () => {
     setCurrentQuote((prev) => (prev + 1) % quotes.length)
+    setLastClickedArrow("right") // Set right arrow as last clicked
   }
 
   const prevQuote = () => {
     setCurrentQuote((prev) => (prev - 1 + quotes.length) % quotes.length)
+    setLastClickedArrow("left") // Set left arrow as last clicked
   }
 
   return (
@@ -171,12 +174,14 @@ const ContentSection = () => {
                 <button
                   onClick={prevQuote}
                   style={{
-                    backgroundColor: "#eee",
+                    backgroundColor: lastClickedArrow === "left" ? "#4CAF50" : "#eee",
+                    color: lastClickedArrow === "left" ? "white" : "black",
                     border: "none",
                     padding: "8px 12px",
                     borderRadius: "4px",
                     cursor: "pointer",
                     fontSize: "16px",
+                    transition: "background-color 0.3s ease",
                   }}
                 >
                   ‹
@@ -187,13 +192,14 @@ const ContentSection = () => {
                 <button
                   onClick={nextQuote}
                   style={{
-                    backgroundColor: "#4CAF50",
-                    color: "white",
+                    backgroundColor: lastClickedArrow === "right" ? "#4CAF50" : "#eee",
+                    color: lastClickedArrow === "right" ? "white" : "black",
                     border: "none",
                     padding: "8px 12px",
                     borderRadius: "4px",
                     cursor: "pointer",
                     fontSize: "16px",
+                    transition: "background-color 0.3s ease",
                   }}
                 >
                   ›

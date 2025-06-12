@@ -450,7 +450,7 @@ const PageContent = ({ currentRoute }) => {
                     e.currentTarget.style.transform = "translateY(0)"
                     e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.1)"
                   }}
-                  onClick={() => window.open("mailto:diptesh.deore@accenture.com", "_blank")}
+                  onClick={() => {}}
                 >
                   <div
                     style={{
@@ -498,7 +498,7 @@ const PageContent = ({ currentRoute }) => {
                     e.currentTarget.style.transform = "translateY(0)"
                     e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.1)"
                   }}
-                  onClick={() => window.open("https://www.linkedin.com/in/diptesh017/", "_blank")}
+                  onClick={() => {}}
                 >
                   <div
                     style={{
@@ -514,16 +514,17 @@ const PageContent = ({ currentRoute }) => {
                     Connect with us professionally
                   </p>
                   <a
-                    href="https://www.linkedin.com/in/diptesh017/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="#"
                     style={{
                       color: "#0077B5",
                       textDecoration: "none",
                       fontWeight: "bold",
                       fontSize: "14px",
                     }}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
                   >
                     linkedin.com/in/diptesh017
                   </a>
@@ -547,7 +548,7 @@ const PageContent = ({ currentRoute }) => {
                     e.currentTarget.style.transform = "translateY(0)"
                     e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.1)"
                   }}
-                  onClick={() => window.open("tel:+919766162144", "_blank")}
+                  onClick={() => {}}
                 >
                   <div
                     style={{
@@ -594,7 +595,7 @@ const PageContent = ({ currentRoute }) => {
                     e.currentTarget.style.transform = "translateY(0)"
                     e.currentTarget.style.boxShadow = "0 8px 25px rgba(0,0,0,0.1)"
                   }}
-                  onClick={() => window.open("https://www.instagram.com/diptesh_deore17/", "_blank")}
+                  onClick={() => {}}
                 >
                   <div
                     style={{
@@ -613,16 +614,17 @@ const PageContent = ({ currentRoute }) => {
                     Follow us for updates and behind the scenes
                   </p>
                   <a
-                    href="https://www.instagram.com/diptesh_deore17/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href="#"
                     style={{
                       color: "#E4405F",
                       textDecoration: "none",
                       fontWeight: "bold",
                       fontSize: "14px",
                     }}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                    }}
                   >
                     @diptesh_deore17
                   </a>
@@ -645,7 +647,7 @@ const PageContent = ({ currentRoute }) => {
                 </p>
                 <div style={{ display: "flex", gap: "15px", justifyContent: "center", flexWrap: "wrap" }}>
                   <button
-                    onClick={() => window.open("mailto:diptesh.deore@accenture.com", "_blank")}
+                    onClick={() => {}}
                     style={{
                       backgroundColor: "#4CAF50",
                       color: "white",
@@ -669,7 +671,7 @@ const PageContent = ({ currentRoute }) => {
                     📧 Send Email
                   </button>
                   <button
-                    onClick={() => window.open("tel:+919766162144", "_blank")}
+                    onClick={() => {}}
                     style={{
                       backgroundColor: "#FF6B35",
                       color: "white",
