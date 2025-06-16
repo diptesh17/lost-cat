@@ -4,7 +4,7 @@ import { useState } from "react"
 
 const ContentSection = () => {
   const [currentQuote, setCurrentQuote] = useState(0)
-  const [lastClickedArrow, setLastClickedArrow] = useState(null) // Track which arrow was last clicked
+  const [lastClickedArrow, setLastClickedArrow] = useState("right") // Set right arrow as default green
 
   const quotes = [
     "The most active thing about me is my imagination.",

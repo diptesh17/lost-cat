@@ -31,7 +31,7 @@ const Header = ({ onShowDB }) => {
           style={{
             width: "40px",
             height: "40px",
-            backgroundColor: "#A100FF",
+            backgroundColor: "white",
             marginRight: "15px",
             borderRadius: "4px",
             display: "flex",
@@ -39,19 +39,21 @@ const Header = ({ onShowDB }) => {
             alignItems: "center",
             position: "relative",
             overflow: "hidden",
+            border: "2px solid #e0e0e0",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
         >
+          {/* Solid Accenture-colored ">" symbol */}
           <div
             style={{
-              position: "absolute",
-              width: "24px",
-              height: "24px",
-              borderRight: "3px solid white",
-              borderTop: "3px solid white",
-              transform: "rotate(45deg)",
-              marginLeft: "-3px",
+              color: "#A100FF",
+              fontSize: "24px",
+              fontWeight: "bold",
+              transform: "rotate(0deg)",
             }}
-          ></div>
+          >
+            &gt;
+          </div>
         </div>
         <h1
           style={{
